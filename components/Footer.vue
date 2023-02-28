@@ -7,7 +7,7 @@
     gap-3
   >
     <NuxtLink i-carbon-campsite to="/" />
-    <a i-carbon-logo-github href="https://github.com/antfu/vitesse-nuxt3" target="_blank" />
+    <a i-carbon-logo-github href="https://github.com/guxuerui/calculate-anything" target="_blank" />
     <DarkToggle />
     <!-- <NuxtLink to="/friend/add"> -->
     <!--   Friend -->

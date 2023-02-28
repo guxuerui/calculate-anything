@@ -1,43 +1,28 @@
 <script setup lang="ts">
+import { calculateTable } from '~/constants'
 import { vRipple } from '~/directives/ripple'
 
-const online = useOnline()
-
-const handleClick = () => {}
+const handleClick = (value: string | number) => {
+  console.log('value: ', value)
+}
 </script>
 
 <template>
-  <div>
-    <Logos mb-6 />
-    <Suspense>
-      <ClientOnly>
-        <PageView v-if="online" />
-        <div v-else text-gray:80>
-          You're offline
-        </div>
-      </ClientOnly>
-      <template #fallback>
-        <div op50 italic>
-          <span animate-pulse>Loading...</span>
-        </div>
-      </template>
-    </Suspense>
-    <InputEntry />
-
-    <div class="wrapper" mx-auto mt-8>
+  <div border="2 solid #555" w-120 mx-auto pa-1 class="out-box">
+    <div class="wrapper">
       <div
-        v-for="i in 16"
+        v-for="card, i in calculateTable"
         :key="i"
         v-ripple
         class="card grid place-items-center"
-        bg="green"
-        ma-1
+        bg="gray" text="white"
+        ma-3
         cursor-pointer
         position="relative"
         border="rounded"
-        @click="handleClick"
+        @click="handleClick(card.value)"
       >
-        {{ i }}
+        {{ card.title }}
       </div>
     </div>
   </div>
@@ -45,15 +30,20 @@ const handleClick = () => {}
 
 <style scoped>
   .out-box {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    box-shadow: 2px 3px 5px #555, -2px -3px 5px #555;
   }
   .wrapper {
-    width: 30rem;
     height: 20rem;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
+  }
+  .card:nth-child(1) {
+    background: #c85953;
+  }
+  .card:nth-child(1), .card:nth-child(16) {
+    grid-column-start: span 2;
+  }
+  .card:last-child {
+    background: #bb6a46;
   }
 </style>

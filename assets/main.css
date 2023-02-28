@@ -5,7 +5,7 @@
     transform: translate(-50%, -50%);
     width: 0;
     height: 0;
-    background-color: rgba(160, 255, 170, 0.9);
+    background-color: rgba(255, 255, 255, .4);
     opacity: 0;
     border-radius: 0.25rem;
     pointer-events: none;
