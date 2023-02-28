@@ -2,13 +2,70 @@
 import { calculateTable } from '~/constants'
 import { vRipple } from '~/directives/ripple'
 
+const output = ref('')
+
+let result = $ref('')
+
+let total = $ref<number | string>('')
+const handleResult = () => {
+  const resArr = result.split(' ')
+
+  let i = 0
+  while (i < resArr.length) {
+    // console.log(resArr[i], typeof resArr[i])
+    switch (resArr[i + 1]) {
+      case '+':
+        total = Number(resArr[i]) + Number(resArr[i + 2] || 0)
+        break
+      // case '-':
+      //   total = total + (resArr[i] - resArr[i + 2])
+      //   break
+      // case '*':
+      //   total = total + (resArr[i] * resArr[i + 2])
+      //   break
+      // case '/':
+      //   total = total + (resArr[i] / resArr[i + 2])
+      //   break
+      default:
+        break
+    }
+    i += 1
+  }
+  result += total
+}
+
 const handleClick = (value: string | number) => {
-  console.log('value: ', value)
+  const operators = ['+', '-', '*', '/', '%', '=']
+
+  if (value === 'clear') {
+    result = ''
+    total = ''
+    return
+  }
+
+  if (operators.includes(value as string) && !total)
+    result += ` ${value} `
+  else if (!total)
+    result += value
+
+  if (value === '=' && !total)
+    handleResult()
 }
 </script>
 
 <template>
   <div border="2 solid #555" w-120 mx-auto pa-1 class="out-box">
+    <Result :result="result" />
+    <input
+      v-model="output"
+      placeholder="输入些什么都行..."
+      type="text" autocomplete="off"
+      p="x-4 y-2" my-3 mx-auto w-111
+      bg="transparent"
+      text="right gray-500 dark:gray-300"
+      border="3px rounded gray-400 dark:gray-500"
+      outline="none active:none"
+    >
     <div class="wrapper">
       <div
         v-for="card, i in calculateTable"
