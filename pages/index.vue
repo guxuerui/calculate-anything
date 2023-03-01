@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { calculateTable } from '~/constants'
+import { calculateTable, numReg } from '~/constants'
 import { vRipple } from '~/directives/ripple'
 
 const output = ref('')
@@ -21,11 +21,11 @@ const saveToStorage = () => {
 const handleResult = () => {
   const resArr = result.split(' ')
   let i = 0
-  let res = +resArr[0]
+  let res: any = numReg.test(resArr[0]) ? +resArr[0] : resArr[0]
   while (i <= resArr.length) {
     switch (resArr[i + 1]) {
       case '+':
-        res = res + parseFloat(resArr[i + 2])
+        res = res + (numReg.test(resArr[i + 2]) ? parseFloat(resArr[i + 2]) : resArr[i + 2])
         break
       case '-':
         res = res - parseFloat(resArr[i + 2])
@@ -67,6 +67,8 @@ const handleClick = (value: string | number) => {
 }
 
 const handleKeyup = () => {
+  result = ''
+  total.value = ''
   if (result.length <= 1)
     result = output.value
   else
