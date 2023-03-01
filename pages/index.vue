@@ -6,16 +6,17 @@ const output = ref('')
 
 let result = $ref('')
 
-let total = $ref<number | string>('')
+const total = ref('')
 const handleResult = () => {
   const resArr = result.split(' ')
 
   let i = 0
-  while (i < resArr.length) {
+  let res = +resArr[0]
+  while (i <= resArr.length) {
     // console.log(resArr[i], typeof resArr[i])
     switch (resArr[i + 1]) {
       case '+':
-        total = Number(resArr[i]) + Number(resArr[i + 2] || 0)
+        res = res + Number(resArr[i + 2])
         break
       // case '-':
       //   total = total + (resArr[i] - resArr[i + 2])
@@ -29,33 +30,33 @@ const handleResult = () => {
       default:
         break
     }
-    i += 1
+    i += 2
   }
-  result += total
+  total.value = `${res}`
 }
 
 const handleClick = (value: string | number) => {
   const operators = ['+', '-', '*', '/', '%', '=']
 
-  if (value === 'clear') {
+  if (value === 'clear' || (operators.includes(value as string) && result.length === 0)) {
     result = ''
-    total = ''
+    total.value = ''
     return
   }
 
-  if (operators.includes(value as string) && !total)
+  if (operators.includes(value as string) && !total.value)
     result += ` ${value} `
-  else if (!total)
+  else if (!total.value)
     result += value
 
-  if (value === '=' && !total)
+  if (value === '=' && !total.value)
     handleResult()
 }
 </script>
 
 <template>
   <div border="2 solid #555" w-120 mx-auto pa-1 class="out-box">
-    <Result :result="result" />
+    <Result :result="result" :total-res="total" />
     <input
       v-model="output"
       placeholder="输入些什么都行..."
