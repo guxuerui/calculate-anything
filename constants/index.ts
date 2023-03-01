@@ -4,6 +4,10 @@ export const appName = 'Calculate Anything'
 
 export const appDescription = 'Calculate Anything'
 
+// regexp -> only number and up to one decimal point
+export const numReg = /^\d+\.?\d*$/
+
+// table data
 export const calculateTable: Table[] = [
   {
     title: 'Clear',
