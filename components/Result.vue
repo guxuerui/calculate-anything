@@ -22,7 +22,7 @@ const getClasses = (result: string) => {
   <div
     text="right"
     p="x-4 y-2" mt-3 mx-auto
-    w-111 min-h-12
+    w-111 min-h-24
     border="3px rounded gray-400 dark:gray-500"
     transition="all 0.5s linear"
   >
