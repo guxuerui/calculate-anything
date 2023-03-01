@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://github.com/guxuerui/calculate-anything/blob/main/public/calculator.png?raw=true" />
+</p>
+
 <h2 align="center">
   Calculate Anything
 </h2><br>
