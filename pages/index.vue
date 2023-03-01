@@ -9,24 +9,25 @@ let result = $ref('')
 const total = ref('')
 const handleResult = () => {
   const resArr = result.split(' ')
-
   let i = 0
   let res = +resArr[0]
   while (i <= resArr.length) {
-    // console.log(resArr[i], typeof resArr[i])
     switch (resArr[i + 1]) {
       case '+':
-        res = res + Number(resArr[i + 2])
+        res = res + parseFloat(resArr[i + 2])
         break
-      // case '-':
-      //   total = total + (resArr[i] - resArr[i + 2])
-      //   break
-      // case '*':
-      //   total = total + (resArr[i] * resArr[i + 2])
-      //   break
-      // case '/':
-      //   total = total + (resArr[i] / resArr[i + 2])
-      //   break
+      case '-':
+        res = res - parseFloat(resArr[i + 2])
+        break
+      case '*':
+        res = res * parseFloat(resArr[i + 2])
+        break
+      case '/':
+        res = res / parseFloat(resArr[i + 2])
+        break
+      case '%':
+        res = res % parseFloat(resArr[i + 2])
+        break
       default:
         break
     }
@@ -38,15 +39,14 @@ const handleResult = () => {
 const handleClick = (value: string | number) => {
   const operators = ['+', '-', '*', '/', '%', '=']
 
-  if (value === 'clear' || (operators.includes(value as string) && result.length === 0)) {
+  if (value === 'clear' || (operators.includes(value as string) && result.length === 0) || total.value) {
     result = ''
     total.value = ''
-    return
   }
 
   if (operators.includes(value as string) && !total.value)
     result += ` ${value} `
-  else if (!total.value)
+  else if (!total.value && value !== 'clear')
     result += value
 
   if (value === '=' && !total.value)
@@ -59,7 +59,7 @@ const handleClick = (value: string | number) => {
     <Result :result="result" :total-res="total" />
     <input
       v-model="output"
-      placeholder="输入些什么都行..."
+      placeholder="随便输入些什么都行..."
       type="text" autocomplete="off"
       p="x-4 y-2" my-3 mx-auto w-111
       bg="transparent"
