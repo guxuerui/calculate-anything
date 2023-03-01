@@ -7,6 +7,17 @@ const output = ref('')
 let result = $ref('')
 
 const total = ref('')
+
+const saveToStorage = () => {
+  let historyArr: string[] = JSON.parse(localStorage.getItem('calculateList')!) || []
+  if (historyArr.length >= 5)
+    historyArr.shift()
+
+  const currRes = result + total.value
+  historyArr = [...historyArr, currRes]
+  localStorage.setItem('calculateList', JSON.stringify(historyArr))
+}
+
 const handleResult = () => {
   const resArr = result.split(' ')
   let i = 0
@@ -34,6 +45,7 @@ const handleResult = () => {
     i += 2
   }
   total.value = `${res}`
+  saveToStorage()
 }
 
 const handleClick = (value: string | number) => {
@@ -42,6 +54,7 @@ const handleClick = (value: string | number) => {
   if (value === 'clear' || (operators.includes(value as string) && result.length === 0) || total.value) {
     result = ''
     total.value = ''
+    output.value = ''
   }
 
   if (operators.includes(value as string) && !total.value)
@@ -51,6 +64,13 @@ const handleClick = (value: string | number) => {
 
   if (value === '=' && !total.value)
     handleResult()
+}
+
+const handleKeyup = () => {
+  if (result.length <= 1)
+    result = output.value
+  else
+    result += output.value.slice(-1)
 }
 </script>
 
@@ -66,6 +86,7 @@ const handleClick = (value: string | number) => {
       text="right gray-500 dark:gray-300"
       border="3px rounded gray-400 dark:gray-500"
       outline="none active:none"
+      @keyup="handleKeyup"
     >
     <div class="wrapper">
       <div
