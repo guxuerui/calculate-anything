@@ -45,7 +45,6 @@ const handleResult = () => {
     i += 2
   }
   total.value = `${res}`
-  saveToStorage()
 }
 
 const handleClick = (value: string | number) => {
