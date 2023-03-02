@@ -14,6 +14,10 @@ export const calculateTable: Table[] = [
     value: 'clear',
   },
   {
+    title: 'Back',
+    value: 'back',
+  },
+  {
     title: '%',
     value: '%',
   },

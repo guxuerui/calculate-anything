@@ -57,18 +57,23 @@ const handleClick = (value: string | number) => {
     output.value = ''
   }
 
-  if (operators.includes(value as string) && !total.value)
+  if (operators.includes(value as string) && !total.value && result.length) {
     result += ` ${value} `
-  else if (!total.value && value !== 'clear')
+  }
+  else if (!operators.includes(value as string) && !total.value && value !== 'clear' && value !== 'back') {
     result += value
+  }
+  else if (!total.value && value !== 'clear' && value === 'back') {
+    result = result.slice(0, -1)
+    if (result.length <= 0)
+      output.value = ''
+  }
 
   if (value === '=' && !total.value)
     handleResult()
 }
 
 const handleKeyup = () => {
-  result = ''
-  total.value = ''
   if (result.length <= 1)
     result = output.value
   else
@@ -103,7 +108,8 @@ const handleKeyup = () => {
         border="rounded"
         @click="handleClick(card.value)"
       >
-        {{ card.title }}
+        <span v-if="card.value === 'back'" i-carbon-arrow-left />
+        <span v-else>{{ card.title }}</span>
       </div>
     </div>
   </div>
@@ -121,7 +127,10 @@ const handleKeyup = () => {
   .card:nth-child(1) {
     background: #c85953;
   }
-  .card:nth-child(1), .card:nth-child(16) {
+  .card:nth-child(2) {
+    background: #c8511f;
+  }
+  .card:nth-child(17) {
     grid-column-start: span 2;
   }
   .card:last-child {
