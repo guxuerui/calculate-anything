@@ -79,6 +79,15 @@ const handleKeyup = () => {
   else
     result += output.value.slice(-1)
 }
+
+// random color
+const random = ref(false)
+const generateRandomColor = () => {
+  const r = (Math.random() * 255).toFixed(0)
+  const g = (Math.random() * 255).toFixed(0)
+  const b = (Math.random() * 255).toFixed(0)
+  return random.value ? `rgba(${r}, ${g}, ${b}, 1)` : 'white'
+}
 </script>
 
 <template>
@@ -101,11 +110,11 @@ const handleKeyup = () => {
         :key="i"
         v-ripple
         class="card grid place-items-center"
-        bg="gray" text="white"
-        ma-3
+        bg="gray" ma-3
         cursor-pointer
         position="relative"
         border="rounded"
+        :style="{ color: generateRandomColor() }"
         @click="handleClick(card.value)"
       >
         <span v-if="card.value === 'back'" i-carbon-arrow-left />
@@ -113,6 +122,9 @@ const handleKeyup = () => {
       </div>
     </div>
   </div>
+  <button btn mt-6 @click="random = !random">
+    Random Color
+  </button>
 </template>
 
 <style scoped>
