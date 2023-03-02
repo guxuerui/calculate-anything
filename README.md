@@ -16,7 +16,13 @@
 - JS Basic Operations
 - Combined operations
 
-### Local Preview
+## TODO
+
+- Judging the order of execution of operators
+
+> Currently the operations are performed from left to right
+
+## Local Preview
 
 ```bash
 git clone git@github.com:guxuerui/calculate-anything.git
