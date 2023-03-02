@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { calculateTable, numReg } from '~/constants'
+import { calculateTable } from '~/constants'
 import { vRipple } from '~/directives/ripple'
 
 const output = ref('')
@@ -18,33 +18,86 @@ const saveToStorage = () => {
   localStorage.setItem('calculateList', JSON.stringify(historyArr))
 }
 
-const handleResult = () => {
-  const resArr = result.split(' ')
-  let i = 0
-  let res: any = numReg.test(resArr[0]) ? +resArr[0] : resArr[0]
-  while (i <= resArr.length) {
-    switch (resArr[i + 1]) {
-      case '+':
-        res = res + (numReg.test(resArr[i + 2]) ? parseFloat(resArr[i + 2]) : resArr[i + 2])
-        break
-      case '-':
-        res = res - parseFloat(resArr[i + 2])
-        break
-      case '*':
-        res = res * parseFloat(resArr[i + 2])
-        break
-      case '/':
-        res = res / parseFloat(resArr[i + 2])
-        break
-      case '%':
-        res = res % parseFloat(resArr[i + 2])
-        break
-      default:
-        break
+const handleResult = (str: string) => {
+  // const resArr = result.split(' ')
+  // let i = 0
+  // let res: any = numReg.test(resArr[0]) ? +resArr[0] : resArr[0]
+  // while (i <= resArr.length) {
+  //   switch (resArr[i + 1]) {
+  //     case '+':
+  //       res = res + (numReg.test(resArr[i + 2]) ? parseFloat(resArr[i + 2]) : resArr[i + 2])
+  //       break
+  //     case '-':
+  //       res = res - parseFloat(resArr[i + 2])
+  //       break
+  //     case '*':
+  //       res = res * parseFloat(resArr[i + 2])
+  //       break
+  //     case '/':
+  //       res = res / parseFloat(resArr[i + 2])
+  //       break
+  //     case '%':
+  //       res = res % parseFloat(resArr[i + 2])
+  //       break
+  //     default:
+  //       break
+  //   }
+  //   i += 2
+  // }
+  // 去除空格
+  str = str.replace(/\s+/g, '')
+  const stack: any[] = []
+  let num: any = 0
+  const char = ''
+  let sign = '+'
+  const operators = ['+', '-', '*', '/', '%', '=']
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charAt(i)
+    if (!operators.includes(char)) {
+      if (/\d/.test(char)) {
+        num = num * 10 + parseInt(char)
+      }
+
+      else {
+        num = char
+        stack.push({ num, isSpecial: false })
+        num = ''
+      }
     }
-    i += 2
+
+    if (operators.includes(char) || i === str.length - 1) {
+      let val: any = {}
+      if (sign === '+') {
+        val = { num, isSpecial: false }
+      }
+      else if (sign === '-') {
+        val = { num: -num, isSpecial: false }
+      }
+      else if (sign === '*') {
+        const prevVal = stack.pop()
+        if (prevVal.isSpecial || val.isSpecial || prevVal.num === '')
+          val = { num: NaN, isSpecial: true }
+        else
+          val = { num: prevVal.num * num, isSpecial: false }
+      }
+      else if (sign === '/') {
+        const prevVal = stack.pop()
+        console.log('[pages/index.vue:84] prevVal: ', prevVal)
+        if (prevVal.isSpecial || val.isSpecial || num === 0 || prevVal.num === '')
+          val = { num: NaN, isSpecial: true }
+        else
+          val = { num: (prevVal.num / num), isSpecial: false }
+      }
+      stack.push(val)
+      num = 0
+      sign = char
+    }
+    // stack.push(val)
   }
-  total.value = `${res}`
+  const isString = stack.filter(s => !/\d/.test(s.num))
+  console.log('stack res: ', stack, isString.length)
+  const res = stack.reduce((acc, val) => acc + val.num, isString.length > 0 ? '' : 0)
+  total.value = (typeof res === 'string' && res.includes('NaN')) ? 'NaN' : `${res}`
 }
 
 const handleClick = (value: string | number) => {
@@ -69,7 +122,7 @@ const handleClick = (value: string | number) => {
   }
 
   if (value === '=' && !total.value)
-    handleResult()
+    handleResult(result)
 }
 
 const handleKeyup = () => {
