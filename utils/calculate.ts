@@ -46,6 +46,13 @@ export function infixToPostfix(infix: string) {
   return postfixQueue
 }
 
+const operators: IIndex = {
+  '+': (num1: number, num2: number) => num1 + num2,
+  '-': (num1: number, num2: number) => num1 - num2,
+  '*': (num1: number, num2: number) => num1 * num2,
+  '/': (num1: number, num2: number) => num1 / num2,
+  '%': (num1: number, num2: number) => num1 % num2,
+}
 // 逆波兰表达式 - 计算值
 export const evalRPN = (tokens: string[]) => {
   // const tokens = str.split(/\s+/)
@@ -59,16 +66,8 @@ export const evalRPN = (tokens: string[]) => {
     else {
       const num2 = stack.pop()
       const num1 = stack.pop()
-      if (token === '+')
-        stack.push(num1 + num2)
-      else if (token === '-')
-        stack.push(num1 - num2)
-      else if (token === '*')
-        stack.push(num1 * num2)
-      else if (token === '/')
-        stack.push(num1 / num2)
-      else if (token === '%')
-        stack.push(num1 % num2)
+      if (token in operators)
+        stack.push(operators[token](num1, num2))
     }
   }
   return stack.pop()
