@@ -16,11 +16,7 @@
 - JS Basic Operations
 - Combined operations
 
-## TODO
-
-- Judging the order of execution of operators
-
-> Currently the operations are performed from left to right
+> Conforms to the rules of mathematical operations, example: 1 + 2 * 3 - 4 = 3
 
 ## Local Preview
 
@@ -30,3 +26,7 @@ cd calculate-anything
 pnpm i # If you don't have pnpm installed, run: npm install -g pnpm
 pnpm run dev
 ```
+
+## License
+
+[MIT license](https://github.com/guxuerui/calculate-anything/blob/main/LICENSE)
