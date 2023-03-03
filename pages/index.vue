@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { calculateTable, numReg } from '~/constants'
+import { calculateTable } from '~/constants'
 import { vRipple } from '~/directives/ripple'
+import { evalRPN, infixToPostfix } from '~/utils/calculate'
 
 const output = ref('')
 
@@ -8,43 +9,18 @@ let result = $ref('')
 
 const total = ref('')
 
-const saveToStorage = () => {
-  let historyArr: string[] = JSON.parse(localStorage.getItem('calculateList')!) || []
-  if (historyArr.length >= 5)
-    historyArr.shift()
-
-  const currRes = result + total.value
-  historyArr = [...historyArr, currRes]
-  localStorage.setItem('calculateList', JSON.stringify(historyArr))
-}
-
-const handleResult = () => {
-  const resArr = result.split(' ')
-  let i = 0
-  let res: any = numReg.test(resArr[0]) ? +resArr[0] : resArr[0]
-  while (i <= resArr.length) {
-    switch (resArr[i + 1]) {
-      case '+':
-        res = res + (numReg.test(resArr[i + 2]) ? parseFloat(resArr[i + 2]) : resArr[i + 2])
-        break
-      case '-':
-        res = res - parseFloat(resArr[i + 2])
-        break
-      case '*':
-        res = res * parseFloat(resArr[i + 2])
-        break
-      case '/':
-        res = res / parseFloat(resArr[i + 2])
-        break
-      case '%':
-        res = res % parseFloat(resArr[i + 2])
-        break
-      default:
-        break
-    }
-    i += 2
+const handleResult = (str: string) => {
+  if (output.value) {
+    if (str.includes('-') || str.includes('*') || str.includes('/') || str.includes('%'))
+      total.value = 'NaN'
+    else
+      total.value = addFromLeftToRight(str)
   }
-  total.value = `${res}`
+  else {
+    const infix = str.slice(0, -3)
+    const res = evalRPN(infixToPostfix(infix))
+    total.value = `${res}`
+  }
 }
 
 const handleClick = (value: string | number) => {
@@ -69,7 +45,7 @@ const handleClick = (value: string | number) => {
   }
 
   if (value === '=' && !total.value)
-    handleResult()
+    handleResult(result)
 }
 
 const handleKeyup = () => {
